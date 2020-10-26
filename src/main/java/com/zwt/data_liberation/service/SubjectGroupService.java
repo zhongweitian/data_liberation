@@ -11,6 +11,9 @@ import java.util.List;
  * 科目组服务接口
  */
 public interface SubjectGroupService {
+    int CREATE_TYP = 1;
+    int UPDATE_TYP = 2;
+
     /**
      * 将实体类转换成Byte[]
      * @param row 行数据
@@ -35,7 +38,16 @@ public interface SubjectGroupService {
 
     /**
      * 多数据对比
-     * @param newBptparms excel生成的实体类
+     * @param filePath 要对比的excel文件地址
      */
-    void multipleDataComparison(List<Bptparm> newBptparms);
+    void multipleDataComparison(String filePath);
+
+    /**
+     * 新增或增加，后续可能会增加删除
+     * @param filePath 文件名
+     * @param type 功能类型，1-新增，2-修改
+     * @param single 是否单条，true是，false批量
+     * @return
+     */
+    int createOrUpdate(String filePath, int type, boolean single);
 }

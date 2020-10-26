@@ -91,7 +91,7 @@ public class SubjectGroupServiceImpl implements SubjectGroupService{
      */
     @Override
     public List<Bptparm> excelToEntities(String filePath) {
-        java.util.List<Bptparm> bptparms = new ArrayList<>();
+        List<Bptparm> bptparms = new ArrayList<>();
         try {
             //读取Excel
             List<java.util.List<Object>> lists = ExcelUtils.readExcel(new File(filePath));
@@ -146,10 +146,16 @@ public class SubjectGroupServiceImpl implements SubjectGroupService{
 
     /**
      * 数据对比
-     * @param newBptparms excel生成的实体类
+     * @param filePath 要对比的excel文件地址
      */
     @Override
-    public void multipleDataComparison(List<Bptparm> newBptparms) {
+    public void multipleDataComparison(String filePath) {
+        //根据Excel文件生成实体类
+        List<Bptparm> newBptparms = excelToEntities(filePath);
+        if (newBptparms == null ||newBptparms.size() == 0){
+            // TODO: 2020/10/26 后续增加返回体
+            return;
+        }
         // TODO: 2020/10/25 后续进一步完善，可以测试一下是放在MAP快，还是数据库里快
         System.out.printf("开始数据对比，共比较%d条数据\r\n",newBptparms.size());
         int seq = 1;
@@ -185,5 +191,35 @@ public class SubjectGroupServiceImpl implements SubjectGroupService{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @param filePath 文件名
+     * @param type 功能类型，1-新增，2-修改
+     * @param single 是否单条，true是，false批量
+     * @return
+     */
+    @Override
+    public int createOrUpdate(String filePath, int type, boolean single) {
+        //将excel文件转成实体类
+        List<Bptparm> bptparms = excelToEntities(filePath);
+        int row = 0;
+        if (bptparms.size() == 0){
+            //要插入的数据为空 // TODO: 2020/10/26 后续增加返回体
+            return -1;
+        }
+        switch (type){
+            case CREATE_TYP:
+                //新增
+                row = single ? bptparmService.insertSingle(bptparms.get(0)) :
+                        bptparmService.insertBulk(bptparms);
+                break;
+            case UPDATE_TYP:
+                //修改
+                row = single ? bptparmService.updateSingle(bptparms.get(0)) :
+                        bptparmService.updateBulk((bptparms));
+                break;
+        }
+        return row;
     }
 }

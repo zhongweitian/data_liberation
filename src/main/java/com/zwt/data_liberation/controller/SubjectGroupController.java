@@ -30,13 +30,7 @@ public class SubjectGroupController {
     @RequestMapping(value = "/comparison")
     @ResponseBody
     public boolean multipleDataComparison() {
-        // TODO: 2020/10/26 把bptparmService相关的处理全都抽取到SubjectGroupService中，并加入校验 
-        //将excel转成对应的实体类
-        List<Bptparm> bptparms = subjectGroupService.excelToEntities("C:/Users/wilton/Desktop/subjectGroup.xlsx");
-        //数据对比
-        if(bptparms != null){
-            subjectGroupService.multipleDataComparison(bptparms);
-        }
+        subjectGroupService.multipleDataComparison("C:/Users/wilton/Desktop/subjectGroup.xlsx");
         return true;
     }
 
@@ -44,45 +38,24 @@ public class SubjectGroupController {
     @RequestMapping(value = "/insert/single")
     @Transactional
     public String insertSingle() {
-        System.out.println("开始插入");
-        List<Bptparm> bptparms = subjectGroupService.excelToEntities("C:/Users/wilton/Desktop/subjectGroup1.xlsx");
-        if (bptparms == null)
-            return "";
-        bptparmService.insertSingle(bptparms.get(0));
-        //数据对比
-        System.out.println("插入结束");
         return "";
     }
 
     @RequestMapping(value = "/insert/bulk")
     @Transactional
     public String insertBulk() {
-        List<Bptparm> bptparms = subjectGroupService.excelToEntities("C:/Users/wilton/Desktop/subjectGroup1.xlsx");
-        if (bptparms == null)
-            return "";
-        bptparmService.insertBulk(bptparms);
         return "";
     }
 
     @RequestMapping(value = "/update/single")
     @Transactional
     public String updateSingle() {
-        System.out.println("开始更新");
-        List<Bptparm> bptparms = subjectGroupService.excelToEntities("C:/Users/wilton/Desktop/subjectGroup1.xlsx");
-        if (bptparms == null)
-            return "";
-        bptparmService.updateSingle(bptparms.get(0));
-        System.out.println("更新结束");
         return "";
     }
 
     @RequestMapping(value = "/update/bulk")
     @Transactional
     public String updateBulk() {
-        List<Bptparm> bptparms = subjectGroupService.excelToEntities("C:/Users/wilton/Desktop/subjectGroup1.xlsx");
-        if (bptparms == null)
-            return "";
-        bptparmService.updateBulk(bptparms);
         return "";
     }
 }
