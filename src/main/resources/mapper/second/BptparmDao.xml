@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zwt.data_liberation.dao.second.BptparmDao">
+    <!--<resultMap id="BaseResultMap" type="com.zwt.data_liberation.pojo.second.Bptparm">
+        <result column="TYPE" property="type" />
+        <result column="CODE" property="code" />
+    </resultMap>-->
+
+
+    <sql id="Base_Column_List">
+       `TYPE`,`CODE`,`EFF_DATE`,`EXP_DATE`,`DESC`,`CDESC`,`VAL`,`UPD_DATE`,`UPD_BR`,`UPD_TLR`,`TS`
+     </sql>
+
+    <!--根据参数类型和参数码查找对应的参数-->
+    <select id="findByTypeAndCode" parameterType="com.zwt.data_liberation.pojo.second.ParameterQuery"
+            resultType="com.zwt.data_liberation.pojo.second.Bptparm">
+        select
+          <include refid="Base_Column_List" />
+        from
+        `bptparm`
+        where
+        `type` = #{type}
+        <if test="code != null and code != ''"> and `code` = #{code}</if>
+    </select>
+
+    <!--插入一条数据-->
+    <insert id="insertSingle" parameterType="com.zwt.data_liberation.pojo.second.Bptparm">
+        insert into `bptparm`( `TYPE`,`CODE`,`EFF_DATE`,`EXP_DATE`,`DESC`,`CDESC`,`VAL`,`UPD_DATE`,`UPD_BR`,`UPD_TLR`,`TS`)
+         values
+            (#{bptparm.TYPE},#{bptparm.CODE},#{bptparm.EFF_DATE},#{bptparm.EXP_DATE},#{bptparm.DESC},
+            #{bptparm.CDESC},#{bptparm.VAL},#{bptparm.UPD_DATE},#{bptparm.UPD_BR},#{bptparm.UPD_TLR},#{bptparm.TS})
+    </insert>
+
+    <!--批量插入多条数据-->
+    <insert id="insertBulk" parameterType="java.util.List">
+        insert into `bptparm`(`TYPE`,`CODE`,`EFF_DATE`,`EXP_DATE`,`DESC`,`CDESC`,`VAL`,`UPD_DATE`,`UPD_BR`,`UPD_TLR`,`TS`)
+        values
+        <foreach collection="bptparms" index="index" separator="," item="item">
+            (#{item.TYPE},#{item.CODE},#{item.EFF_DATE},#{item.EXP_DATE},#{item.DESC},#{item.CDESC},#{item.VAL},#{item.UPD_DATE},
+            #{item.UPD_BR},#{item.UPD_TLR},#{item.TS})
+        </foreach>
+    </insert>
+
+    <!--单条更新-->
+    <update id="updateSingle" parameterType="com.zwt.data_liberation.pojo.second.Bptparm">
+        update `bptparm`
+        <set>
+            `EFF_DATE`=#{bptparm.EFF_DATE},
+            `EXP_DATE`=#{bptparm.EXP_DATE},
+            `DESC`=#{bptparm.DESC},
+            `CDESC`=#{bptparm.CDESC},
+            `VAL`=#{bptparm.VAL},
+            `UPD_DATE`=#{bptparm.UPD_DATE},
+            `UPD_BR`=#{bptparm.UPD_BR},
+            `UPD_TLR`=#{bptparm.UPD_TLR},
+            `TS`=#{bptparm.TS}
+        </set>
+        where `TYPE`=#{bptparm.TYPE} and `CODE`=#{bptparm.CODE}
+    </update>
+
+    <!--批量更新-->
+    <update id="updateBulk" parameterType="java.util.List">
+        <foreach collection="bptparms" item="item" index="index" open="" close="" separator=";">
+            update `bptparm`
+            <set>
+                `EFF_DATE`=#{item.EFF_DATE},
+                `EXP_DATE`=#{item.EXP_DATE},
+                `DESC`=#{item.DESC},
+                `CDESC`=#{item.CDESC},
+                `VAL`=#{item.VAL},
+                `UPD_DATE`=#{item.UPD_DATE},
+                `UPD_BR`=#{item.UPD_BR},
+                `UPD_TLR`=#{item.UPD_TLR},
+                `TS`=#{item.TS}
+            </set>
+             where `TYPE`=#{item.TYPE} and `CODE`=#{item.CODE}
+        </foreach>
+    </update>
+
+
+</mapper>
